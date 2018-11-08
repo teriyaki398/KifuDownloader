@@ -38,7 +38,7 @@ $ brew services stop mongodb
 |:---|:---|
 | `mongo` | mongoDB のシェルを起動 | 
 | `show dbs` | データベース一覧を表示 | 
-| `use [name] | 使用するデータベースを変更 | 
+| `use [name]` | 使用するデータベースを変更 | 
 | `show collections` | コレクション一覧を表示 |
 
 
