@@ -6,7 +6,7 @@ from time import sleep
 import requests
 import re
 
-class KifuDL:
+class ShogiwarsKifuDL:
         """
         将棋ウォーズの棋譜をダウンロードする．
         
@@ -35,7 +35,6 @@ class KifuDL:
 
                 return res.text
 
-
         def extractURL(self, text):
                 """
                 HTML から日付，URL，対局内容のハッシュタグを取得し，辞書のリストで返す
@@ -49,7 +48,8 @@ class KifuDL:
                 log = []
                 for i in lis:
                         date = i.find(class_="game_date").text
-                        date = date[date.index("(")+1 : date.index(")")]
+                        date = date.split(":")
+                        date = date[0][-1*(len("XXXX/XX/XX XX")):] + ":" + date[1][:len("XX")]
 
                         url = i.find(class_="game_replay").find("a").get("href")
 
@@ -64,3 +64,4 @@ class KifuDL:
                         log.append({"date":date, "url":url, "tag":tag})
 
                 return log
+
