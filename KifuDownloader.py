@@ -4,7 +4,9 @@ from bs4 import BeautifulSoup
 from tqdm import tqdm
 from time import sleep
 from glob import glob
+from pymongo import MongoClient
 import requests
+import json
 import re
 import os
 
@@ -44,6 +46,7 @@ class ShogiwarsKifuDL:
                 page : int
                         ページ番号 1 ~ n
                 """
+                sleep(2)
                 rules = {"10m": "", "3m":"sb", "10s":"s1"}
                 payload = {"gtype": rules[rule], "locale":"ja", "v":"0.0.0", "page":page}
                 res = requests.get(self.url, params=payload)
@@ -91,17 +94,18 @@ class ShogiwarsKifuDL:
         
         def extractKifu(self, url):
                 """
-                将棋ウォーズの棋譜URL から棋譜の部分だけを抽出し，文字列で返す
+                将棋ウォーズの棋譜URL から棋譜の部分だけを抽出し，リストで返す
 
                 url : string
                         棋譜のURL
                 """
+                sleep(2)
                 res = requests.get(url)
                 soup = BeautifulSoup(res.text, "lxml")
                 
                 kifu = soup.find_all("script")[13].text
                 kifu = kifu.split("receiveMove(")[1].split(");")[0][1:-1]
-                kifu = kifu.replace("\t", "\n")
+                kifu = kifu.split("\t")
                 
                 return kifu
 
@@ -133,9 +137,9 @@ class ShogiwarsKifuDL:
                 return data
         
 
-        def saveAllData(self, rule):
+        def saveAllDataLocal(self, rule):
                 """
-                取得できる棋譜をローカルに保存していく
+                取得できる棋譜をローカルにJSON形式で保存していく
                 
                 rule : string
                         10分切れ負け 10m
@@ -148,38 +152,73 @@ class ShogiwarsKifuDL:
                 flag = True
 
                 while flag:
-                        sleep(2)
                         res = self.getHTML(rule, page)
                         page += 1
 
                         data = self.extractURL(res)
-
                         # 最後のページの抽出なら，終了
                         if len(data) != 10:
-                                flag = False
+                            flag = False
 
                         for i in tqdm(data):
                                 # もしすでにファイルが存在していたらbreak して終了
-                                file_name = self.folder_path + i["date"] + "-" + i["sente"].split(" ")[0] + "-" + i["gote"].split(" ")[0]
+                                file_name = self.folder_path + i["date"] + "-" + i["sente"].split(" ")[0] + "-" + i["gote"].split(" ")[0]+".json"
                                 if os.path.exists(file_name):
                                         flag = False
                                         break
-                                
-                                with open(file_name, "w") as f:
-                                        text = ""
-                                        text += "date " + i["date"] + "\n"
-                                        text += "rule " + rule + "\n"
-                                        text += "sente " + i["sente"] + "\n"
-                                        text += "gote " + i["gote"] + "\n"
-                                        text += "url " + i["url"] + "\n"
-                                        text += "tag "
-                                        for j in range(len(i["tag"])):
-                                                text += i["tag"][j] + " "
-                                        text += "\n"
-                                        
-                                        text += self.extractKifu(i["url"])
 
-                                        f.write(text)
+                                with open(file_name, "w") as f:
+                                        kifu = self.extractKifu(i["url"])
+                                        i["kifu"] = kifu
+                                        json.dump(i, f)
         
+        def saveAllDataDB(self, rule):
+                """
+                取得できる棋譜をデータベースに保存していく
+                使用するデータベースはMongo DB
+
+                データベース名は "Shogiwars"
+                コレクション名は "[ユーザーID]_games"
+                としている
+                
+                rule : string
+                        10分切れ負け 10m
+                        3分切れ負け 3m
+                        10秒将棋 10s
+                """
+
+                client = MongoClient("localhost", 27017)
+                db = client["Shogiwars"]
+                collection = db[self.user_name + "_games"]
+
+                data = []
+                page = 1
+                flag = True
+
+                while flag:
+                        res = self.getHTML(rule, page)
+                        page += 1
+
+                        data = self.extractURL(res)
+                        # 最後のページの抽出なら，終了
+                        if len(data) != 10:
+                            flag = False
+
+                        for i in tqdm(data):
+                                # DBを一意に検索できるように"ファイル名"を追加する
+                                file_name = i["date"] + "-" + i["sente"].split(" ")[0] + "-" + i["gote"].split(" ")[0]+".json"
+                                i["file_name"] = file_name
                                 
-                        
+                                # すでにDBに存在するファイル名ならbreak して終了
+                                if collection.find_one({"file_name": file_name}) != None:
+                                        flag = False
+                                        break
+
+                                # 棋譜データをDL
+                                kifu = self.extractKifu(i["url"])
+                                i["kifu"] = kifu
+
+                                # DB に追加する
+                                collection.insert_one(i)
+
+                
