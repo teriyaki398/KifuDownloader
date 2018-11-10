@@ -9,6 +9,7 @@ import requests
 import json
 import re
 import os
+import sys
 
 class ShogiwarsKifuDL:
         """
@@ -26,7 +27,7 @@ class ShogiwarsKifuDL:
         def __init__(self, user_name):
                 self.user_name = user_name
                 self.url = "https://shogiwars.heroz.jp/users/history/"+self.user_name+"/web_app"
-                self.folder_path = "../ShogiwarsKifu/" + user_name + "/"
+                self.folder_path = "./ShogiwarsKifu/" + user_name + "/"
                 self.file_lis = glob(self.folder_path + "*")
 
                 # 指定したユーザー名のフォルダが存在していなければ作成する
@@ -49,7 +50,12 @@ class ShogiwarsKifuDL:
                 sleep(2)
                 rules = {"10m": "", "3m":"sb", "10s":"s1"}
                 payload = {"gtype": rules[rule], "locale":"ja", "v":"0.0.0", "page":page}
-                res = requests.get(self.url, params=payload)
+
+                try:
+                        res = requests.get(self.url, params=payload)
+                except:
+                        print("Request Error")
+                        sys.exit()
 
                 return res.text
 
@@ -100,7 +106,12 @@ class ShogiwarsKifuDL:
                         棋譜のURL
                 """
                 sleep(2)
-                res = requests.get(url)
+                try:
+                        res = requests.get(url)
+                except:
+                        print("Request Error")
+                        sys.exit()
+
                 soup = BeautifulSoup(res.text, "lxml")
                 
                 kifu = soup.find_all("script")[13].text
@@ -189,6 +200,7 @@ class ShogiwarsKifuDL:
                         "url"           : 将棋ウォーズのURL
                         "tag"           : 戦型のハッシュタグ
                         "file_name"     : ローカルに保存する際のファイル名
+                        "rule"          : 対局ルール
                         "kifu"          : 棋譜データ（ウォーズ形式）
 
                 }
@@ -228,6 +240,7 @@ class ShogiwarsKifuDL:
 
                                 # 棋譜データをDL
                                 kifu = self.extractKifu(i["url"])
+                                i["rule"] = rule
                                 i["kifu"] = kifu
 
                                 # DB に追加する

@@ -176,6 +176,7 @@ pip install pymongodb
 ```
 
 + コレクションを参照
+
 全て取ってくる
 ```
 >>> collection.find()

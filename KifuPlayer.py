@@ -150,10 +150,3 @@ class KifuPlayer:
         return col[-1 * c]
         
 
-        
-# debug
-with open("../ShogiwarsKifu/t3rry/2018-11-09-10-27-2_or2-T3RRY.json", "r") as f:
-    x = json.load(f)
-
-w = KifuPlayer(x["kifu"])
-
