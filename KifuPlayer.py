@@ -71,6 +71,11 @@ class KifuPlayer:
         # 最後の一行は勝敗に関する情報なので取り除く
         kifu = self.kifu[:-1]
 
+        # 一手も指さずに接続切れ勝ち（負け）になった時は、
+        # kifuの長さが0になるので変換しない
+        if len(kifu) == 1:
+            return ans
+
         for move in kifu:
 
             teban       = move[0]
