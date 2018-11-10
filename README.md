@@ -1,5 +1,8 @@
-# python-shogi
-将棋のPython ライブラリ
+
+
+# python-shogi についてのメモ
+将棋のPython ライブラリ  
+https://github.com/gunyarakun/python-shogi
 
 1. pip を使ってインストール
 ```
@@ -27,7 +30,7 @@ $ pip install python-shogi
 先手の持駒：
 ```
 
-** ポイント **
+**ポイント**  
 入出力はSFEN形式で行う．  
 http://ch.nicovideo.jp/kifuwarabe/blomaga/ar795371
 
@@ -132,3 +135,57 @@ $ mongo
 | `show dbs` | データベース一覧を表示 | 
 | `use [name]` | 使用するデータベースを変更 | 
 | `show collections` | コレクション一覧を表示 |
+
+
+# pymongo の使い方
+
+1. pip を使ってインストール
+```bash
+pip install pymongodb
+```
+
++ mongoDBへのアクセス
+```
+>>> from pymongo import MongoClient
+>>> client = MongoClient("localhost", 27017)
+```
+
++ データベースを使用（なければ作成）
+```
+>>> db = client["db_name"]
+```
+
++ コレクションを使用（なければ作成）
+```
+>>> collection = db["collection_name"]
+```
+
++ コレクションに追加
+```
+>>> type(post)
+<class 'dict'>
+>>> collection.insert_one(post)
+```
+
+複数追加したい場合は，辞書のリストを作成し，
+
+```
+>>> type(post)
+<class 'list'>
+>>> collection.insert_many(post)
+```
+
++ コレクションを参照
+全て取ってくる
+```
+>>> collection.find()
+```
+
+`Cursor` というイテレータオブジェクトが返ってくる．
+for文などで回すことで一つずつ参照できる．
+
+一つ取ってくる
+```
+>>> collection.find_one({"key": "000"})
+```
+引数として渡した条件に一致するデータが返ってくる
