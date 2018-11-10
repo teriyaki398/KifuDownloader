@@ -10,8 +10,6 @@ from KifuDownloader import ShogiwarsKifuDL
 棋譜を進めながら、盤面を保存していく。
 """
 
-user_name = input("user name : ")
-
 class SituationDB:
     
     def __init__(self, user_name):
@@ -52,7 +50,6 @@ class SituationDB:
                     "file_list": [[game["file_name"], i+1]]
                 }
                 self.situation_collection.insert_one(post)
-                print(board.kif_str())
             # 同一盤面が発見できたら
             else:
                 s = self.situation_collection.find_one({"situation": situation})
@@ -62,7 +59,5 @@ class SituationDB:
                 new_situ = [game["file_name"], i+1]
                 if new_situ not in file_list:
                     file_list.append([game["file_name"], i+1])
-                    print(file_list)
                     self.situation_collection.update({"situation": situation}, {"$set": {"file_list": file_list}})
-                    print(board.kif_str())
             

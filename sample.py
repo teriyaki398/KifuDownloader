@@ -5,6 +5,7 @@ from tqdm import tqdm
 from pymongo import MongoClient
 from KifuPlayer import KifuPlayer
 from KifuDownloader import ShogiwarsKifuDL
+from SituationDB import SituationDB
 
 
 user_name = input("user name : ")
@@ -15,8 +16,19 @@ shogiWarsKifuDL = ShogiwarsKifuDL(user_name)
 for i in rules:
     shogiWarsKifuDL.saveAllDataDB(i)
 
+
 # 棋譜データベースへアクセス
 client = MongoClient("localhost", 27017)
 db = client["Shogiwars"]
-collection = db[user_name + "_games"]
+games_collection = db[user_name + "_games"]
+situation_collection = db[user_name + "_situation"]
+
+games = []
+for i in games_collection.find():
+    games.append(i)
+
+situationDB = SituationDB(user_name)
+for i in tqdm(games):
+    situationDB.registerSituation(i)
+
 
