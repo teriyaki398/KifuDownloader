@@ -180,6 +180,18 @@ class ShogiwarsKifuDL:
                 データベース名は "Shogiwars"
                 コレクション名は "[ユーザーID]_games"
                 としている
+
+                格納する形式は
+                {
+                        "date"          : 日付
+                        "sente"         : 先手番のユーザー名 
+                        "gote"          : 後手番のユーザー名
+                        "url"           : 将棋ウォーズのURL
+                        "tag"           : 戦型のハッシュタグ
+                        "file_name"     : ローカルに保存する際のファイル名
+                        "kifu"          : 棋譜データ（ウォーズ形式）
+
+                }
                 
                 rule : string
                         10分切れ負け 10m
