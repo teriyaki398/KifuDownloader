@@ -1,46 +1,45 @@
-# kivy - Installation on OS X
-https://kivy.org/doc/stable/installation/installation-osx.html
+# python-shogi
+将棋のPython ライブラリ
 
-1. homebew を使ってインストール
-```bash
-$ brew install pkg-config sdl2 sdl2_image sdl2_ttf sdl2_mixer gstreamer
+1. pip を使ってインストール
+```
+$ pip install python-shogi
 ```
 
-2. pip で Cython と Kivy をインストール
-```bash
-pip install Cython==0.26.1
-pip install kivy
+2. 将棋盤を描画するまで
+```
+>>> import shogi
+>>> board = shogi.Board()
+>>> print(board.kif_str())
+後手の持駒：
+  ９ ８ ７ ６ ５ ４ ３ ２ １
++---------------------------+
+|v香v桂v銀v金v玉v金v銀v桂v香|一
+| ・v飛 ・ ・ ・ ・ ・v角 ・|二
+|v歩v歩v歩v歩v歩v歩v歩v歩v歩|三
+| ・ ・ ・ ・ ・ ・ ・ ・ ・|四
+| ・ ・ ・ ・ ・ ・ ・ ・ ・|五
+| ・ ・ ・ ・ ・ ・ ・ ・ ・|六
+| 歩 歩 歩 歩 歩 歩 歩 歩 歩|七
+| ・ 角 ・ ・ ・ ・ ・ 飛 ・|八
+| 香 桂 銀 金 玉 金 銀 桂 香|九
++---------------------------+
+先手の持駒：
 ```
 
-# mongoDB - Installation on OS X
+** ポイント **
+入出力はSFEN形式で行う．  
+http://ch.nicovideo.jp/kifuwarabe/blomaga/ar795371
 
-1. homebrew を使ってインストール
-```bash
-$ brew install mongodb
++ 駒を動かす
+```
+>>> board.push(shogi.Move.from_usi(["操作"]))
 ```
 
-2. mongodb の起動
-```bash
-$ brew services start mongodb
++ SFEN形式の文字列を取得
 ```
-
-3. 起動しているかどうかの確認
-```bash
-$ brew services list
+>>> board.sfen()
 ```
-
-4. mongodb の停止
-```bash
-$ brew services stop mongodb
-```
-
-|コマンド | 操作 |
-|:---|:---|
-| `mongo` | mongoDB のシェルを起動 | 
-| `show dbs` | データベース一覧を表示 | 
-| `use [name]` | 使用するデータベースを変更 | 
-| `show collections` | コレクション一覧を表示 |
-
 
 # 将棋ウォーズ独自の棋譜フォーマット
 こちらを参考にしつつ推測した結果  
@@ -81,3 +80,55 @@ SENTE_WIN_CHECKMATE
 
 例えば▲７六歩 は `+7776FU` となり，▲７二金打 は `+0072KI` となる．ちなみに駒を成る場合は記号を変えるだけ．例えば▲４六角〜▲１三角成は`+4613UM`で，不成は`+4613KA`となる．
 
+
+# kivy - Installation on OS X
+https://kivy.org/doc/stable/installation/installation-osx.html
+
+1. homebew を使ってインストール
+```bash
+$ brew install pkg-config sdl2 sdl2_image sdl2_ttf sdl2_mixer gstreamer
+```
+
+2. pip で Cython と Kivy をインストール
+```bash
+pip install Cython==0.26.1
+pip install kivy
+```
+
+# mongoDB - Installation on OS X
+
+1. homebrew を使ってインストール
+```bash
+$ brew install mongodb
+```
+
++ mongodb の起動
+```bash
+$ brew services start mongodb
+```
+
++ 起動しているかどうかの確認
+```bash
+$ brew services list
+```
+
++ mongodb の停止
+```bash
+$ brew services stop mongodb
+```
+
++ 特定のコレクションに含まれているデータを全て表示する
+```
+$ mongo
+> show dbs
+> use [db name]
+> show collections
+> db.[collection name].find()
+``` 
+
+|コマンド | 操作 |
+|:---|:---|
+| `mongo` | mongoDB のシェルを起動 | 
+| `show dbs` | データベース一覧を表示 | 
+| `use [name]` | 使用するデータベースを変更 | 
+| `show collections` | コレクション一覧を表示 |
