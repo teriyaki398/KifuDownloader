@@ -7,7 +7,7 @@ from KifuPlayer import KifuPlayer
 from KifuDownloader import ShogiwarsKifuDL
 
 
-user_name = "t3rry"
+user_name = input("user name : ")
 rules = ["10m", "3m", "10s"]
 
 # もし新規に対局データがあればDBに追加しておく
