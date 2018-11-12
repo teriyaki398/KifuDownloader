@@ -8,11 +8,20 @@ TextWidget:
   
     Label:
       id: label1
-      font_size: 120
+      font_size: 70
       text: root.text
 
-    Button:
-      id: button1
-      text: "OK"
-      font_size: 120
-      on_press: root.buttonClicked()
+    BoxLayout:
+      TextInput:
+        id: text_box
+        size_hint_x: 70
+        font_size: 70
+        focus: True
+        on_text_validate: root.buttonClicked()
+      
+      Button:
+        id: button1
+        size_hint_x: 30
+        text: "OK"
+        font_size: 70
+        on_press: root.buttonClicked()

@@ -1,0 +1,85 @@
+#: import get_color_from_hex kivy.utils.get_color_from_hex
+
+CalculatorRoot
+
+<CalculatorRoot>
+  Calculator1
+    id: calculator1
+
+
+<calculator1>
+  orientation: "vertical"
+  display: display_input
+
+  ActionBar:
+    
+    ActionView:
+      ActionPrevious:
+        title: "電卓"
+        with_previous: False
+
+      ActionButton:
+        text: "切り替え"
+        on_press: print("push ").app.root.change_calc2()
+
+  TextInput:
+    id: display_input
+    size_hint_y: 1
+    font_size: 60
+    hint_text: "0"
+    
+  Keyboard:
+    size_hint_y: 3.5
+
+
+<Keyboard@Gridlayout>
+  cols: 5
+  rows: 5
+
+  spacing: 2
+  padding: 4
+
+  ClearButton:
+    text: "C"
+  CalcButton:
+    text: "%"
+  DelButton:
+    text: "<x"
+  OperatorButton:
+    text: "/"
+
+  NumberButton:
+    text: "7"
+  NumberButton:
+    text: "8"
+  NumberButton:
+    text: "9"
+  OperatorButton:
+    text: "*"
+
+  NumberButton:
+    text: "4"
+  NumberButton:
+    text: "5"
+  NumberButton:
+    text: "6"
+  OperatorButton:
+    text: "-"
+
+  NumberButton:
+    text: "1"
+  NumberButton:
+    text: "2"
+  NumberButton:
+    text: "3"
+  OperatorButton:
+    text: "+"
+
+  CalcButton:
+    text: "+/-"
+  NumberButton:
+    text: "0"
+  ClacButton:
+    text: "."
+  EqualButton:
+    text: "="
