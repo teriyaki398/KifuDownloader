@@ -27,12 +27,6 @@ class ShogiwarsDownloader:
         def __init__(self, user_name):
                 self.user_name = user_name
                 self.url = "https://shogiwars.heroz.jp/users/history/"+self.user_name+"/web_app"
-                self.folder_path = "./ShogiwarsKifu/" + user_name + "/"
-                self.file_lis = glob(self.folder_path + "*")
-
-                # 指定したユーザー名のフォルダが存在していなければ作成する
-                if os.path.exists(self.folder_path) == False:
-                        os.mkdir(self.folder_path)
 
 
         def getHTML(self, rule, page):
@@ -157,6 +151,13 @@ class ShogiwarsDownloader:
                         3分切れ負け 3m
                         10秒将棋 10s
                 """
+
+                self.folder_path = "./ShogiwarsKifu/" + self.user_name + "/"
+                self.file_lis = glob(self.folder_path + "*")
+
+                # 指定したユーザー名のフォルダが存在していなければ作成する
+                if os.path.exists(self.folder_path) == False:
+                        os.mkdir(self.folder_path)
 
                 data = []
                 page = 1
