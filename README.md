@@ -1,4 +1,9 @@
+# ローカルにダウンロードする方法
+```python
+% python downloadKifu.py
+```
 
+将棋ウォーズ側の仕様変更により使えなくなる可能性はある
 
 # python-shogi についてのメモ
 将棋のPython ライブラリ  
