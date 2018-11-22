@@ -1,6 +1,18 @@
-# ローカルにダウンロードする方法
+Python 3.6.2
+
++ 棋譜をローカルにダウンロードする
+
 ```python
-% python downloadKifu.py
+$ python downloadKifu.py
+```
+対象のユーザー名を入力する
+
+
++ 棋譜をデータベースに登録する
+
+mongoDB が起動している状態で
+```python
+$ python updateDB.py
 ```
 
 将棋ウォーズ側の仕様変更により使えなくなる可能性はある
