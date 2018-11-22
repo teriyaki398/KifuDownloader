@@ -12,7 +12,7 @@ rules = ["10m", "3m", "10s"]
 # もし新規に対局データがあればDBに追加しておく
 shogiwars = ShogiwarsDownloader(user_name)
 for i in rules:
-    print("Searching i")
+    print("Searching " + i)
     shogiwars.saveAllDataDB(i)
 
 

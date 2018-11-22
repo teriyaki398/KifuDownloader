@@ -43,7 +43,7 @@ class ShogiwarsDownloader:
                 """
                 sleep(2)
                 rules = {"10m": "", "3m":"sb", "10s":"s1"}
-                payload = {"gtype": rules[rule], "locale":"ja", "v":"0.0.0", "page":page}
+                payload = {"gtype": rules[rule], "locale":"ja", "page":page}
 
                 try:
                         res = requests.get(self.url, params=payload)
@@ -61,7 +61,7 @@ class ShogiwarsDownloader:
                 text : string
                         HTML の文字列
                 """
-                soup = BeautifulSoup(text.replace("\\", ""))
+                soup = BeautifulSoup(text.replace("\\", ""), "lxml")
                 lis = soup.find_all(class_ = re.compile("contents.*"))
 
                 log = []
@@ -73,7 +73,7 @@ class ShogiwarsDownloader:
                         date = date.replace(" ", "-")
                         
                         players = i.find(class_="players").find_all("a")
-                        players = [j.text[18:].replace("\u2009", " ")[:-1] for j in players]
+                        players = [j.text.replace("\n", "").replace(" ", "") for j in players]
 
                         url = i.find(class_="game_replay").find("a").get("href")
                         url = "http:" + url
